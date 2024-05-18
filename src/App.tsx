@@ -1,5 +1,5 @@
 // import Message from "./components/Message";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import ListGroup from "./components/ListGroup";
 import Button from "./components/Button";
 import Alert from "./components/Alert";
@@ -21,9 +21,6 @@ function App() {
 
   const handleSelectItem = (item: string) => {
     console.log(item);
-    useEffect(() => {
-      alert(item);
-    });
   };
 
   const videoConstraints = {
