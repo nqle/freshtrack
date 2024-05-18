@@ -29,6 +29,36 @@ function App() {
     facingMode: { exact: "environment" },
   };
 
+  async function subscribe() {
+    const VAPID_PUBLIC_KEY =
+      "BGS6aY-ekmvaK3mrPdRuwdk5CgQRLWcRUTn39LyQb1SuVkhTAZdH-3VshouQYxr8FgmdQYhkzMIDX8tiJZ64DgY";
+
+    let swRegistration = await navigator.serviceWorker.getRegistration();
+    if (!swRegistration) {
+      alert("reg failed");
+      return;
+    }
+
+    let pushManager = swRegistration?.pushManager;
+    if (!pushManager) {
+      alert("No success");
+      return;
+    }
+    let subscriptionOptions = {
+      userVisibleOnly: true,
+      applicationServerKey: VAPID_PUBLIC_KEY,
+    };
+    try {
+      let subscription = await pushManager.subscribe(subscriptionOptions);
+      var message =
+        "<b>Active subscription:</b><br><br>" +
+        JSON.stringify(subscription.toJSON());
+      console.log(message);
+    } catch (error) {
+      alert("Push subscription error: " + error);
+    }
+  }
+
   return (
     <div>
       <Webcam
@@ -74,6 +104,7 @@ function App() {
           test
         </Alert>
       )}
+      <Button onClick={subscribe}>Enable Notifications</Button>
       {foodItems.length === 0 ? (
         <h1>Start adding items!</h1>
       ) : (
