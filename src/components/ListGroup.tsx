@@ -1,6 +1,4 @@
-import { ReactNode, useState } from "react";
-import Food from "../data/Food";
-import FoodItem from "./FoodItem";
+import { ReactNode } from "react";
 
 interface Props {
   items: ReactNode;
@@ -8,9 +6,7 @@ interface Props {
   onSelectItem: (item: string) => void;
 }
 
-function ListGroup({ items, heading, onSelectItem }: Props) {
-  const [selectedItemIdx, setSelectedItemIdx] = useState(-1);
-
+function ListGroup({ items, heading }: Props) {
   return (
     <>
       <h1>{heading}</h1>
