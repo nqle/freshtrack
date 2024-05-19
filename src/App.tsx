@@ -60,7 +60,10 @@ function App() {
   }
 
   return (
-    <div>
+    <div
+      data-bs-theme="dark"
+      className="p-1 mb-2 bg-black bg-gradient text-white"
+    >
       <Webcam
         audio={false}
         height={720}
