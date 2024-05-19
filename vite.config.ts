@@ -7,6 +7,12 @@ export default defineConfig({
   plugins: [
     react(),
     VitePWA({
+      registerType: "autoUpdate",
+      strategies: "injectManifest",
+      srcDir: "src",
+      injectManifest: {
+        swSrc: "src/sw.js",
+      },
       manifest: {
         name: "FreshTrack",
         short_name: "FreshTrack",
