@@ -59,6 +59,8 @@ function App() {
     }
   }
 
+  const [takingPhoto, setTakingPhoto] = useState<boolean>(false);
+
   const WebcamCapture = () => {
     const webcamRef = useRef<Webcam>(null);
     const [imgSrc, setImgSrc] = useState<string | null>(null);
@@ -71,27 +73,46 @@ function App() {
     }, [webcamRef, setImgSrc]);
 
     return (
-      <>
-        <Webcam
-          videoConstraints={videoConstraints}
-          audio={false}
-          ref={webcamRef}
-          screenshotFormat="image/jpeg"
-        />
-        <Button onClick={capture}>Capture photo</Button>
-        {imgSrc && <img src={imgSrc} />}
-      </>
+      takingPhoto && (
+        <>
+          <Webcam
+            videoConstraints={videoConstraints}
+            audio={false}
+            ref={webcamRef}
+            screenshotFormat="image/jpeg"
+          />
+
+          <Button onClick={capture}>Capture photo</Button>
+          {imgSrc && <img src={imgSrc} />}
+        </>
+      )
     );
   };
 
   return (
     <div className="p-1 text-white">
       <div className="input-group mb-3">
+        <button
+          onClick={() => {
+            setTakingPhoto(!takingPhoto);
+          }}
+          className={"btn btn-primary"}
+        >
+          {!takingPhoto ? (
+            <img
+              src="camera-icon.png"
+              alt="Take Photo"
+              style={{ width: "50px", height: "50px" }}
+            />
+          ) : (
+            "Cancel"
+          )}
+        </button>
         <WebcamCapture></WebcamCapture>
         <input
           type="text"
           className="form-control"
-          placeholder="List your food here!"
+          placeholder="List your food here"
           aria-label="Food"
           aria-describedby="basic-addon1"
         ></input>
