@@ -81,7 +81,16 @@ function App() {
             ref={webcamRef}
             screenshotFormat="image/jpeg"
           />
-          <Button onClick={capture}>Capture photo</Button>
+          <button
+            onClick={capture}
+            className="btn btn-secondary rounded-pill m-4"
+          >
+            <img
+              src="camera-icon.png"
+              alt="Take Photo"
+              style={{ width: "50px", height: "50px" }}
+            />
+          </button>
         </>
       )
     );
@@ -100,13 +109,8 @@ function App() {
           {imgSrc && !takingPhoto && "Retake Photo"}
           {takingPhoto && "Cancel"}
         </button>
-        {takingPhoto ? (
-          <WebcamCapture></WebcamCapture>
-        ) : imgSrc ? (
-          <img src={imgSrc} />
-        ) : (
-          <></>
-        )}
+        {takingPhoto && <WebcamCapture />}
+        {!takingPhoto && imgSrc && <img src={imgSrc} />}
         <input
           type="text"
           className="form-control"
