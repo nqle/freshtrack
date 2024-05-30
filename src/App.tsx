@@ -1,5 +1,5 @@
 // import Message from "./components/Message";
-import { useState } from "react";
+import { useState, useRef, useCallback } from "react";
 import ListGroup from "./components/ListGroup";
 import Button from "./components/Button";
 import Alert from "./components/Alert";
@@ -23,11 +23,11 @@ function App() {
     console.log(item);
   };
 
-  const videoConstraints = {
-    width: 1280,
-    height: 720,
-    facingMode: { exact: "environment" },
-  };
+  // const videoConstraints = {
+  //   width: 1280,
+  //   height: 720,
+  //   facingMode: { exact: "environment" },
+  // };
 
   async function subscribe() {
     const VAPID_PUBLIC_KEY =
@@ -59,18 +59,38 @@ function App() {
     }
   }
 
+  const WebcamCapture = () => {
+    const webcamRef = useRef<Webcam>(null);
+    const [imgSrc, setImgSrc] = useState<string | null>(null);
+
+    const capture = useCallback(() => {
+      if (webcamRef.current) {
+        const imageSrc = webcamRef.current.getScreenshot();
+        setImgSrc(imageSrc);
+      }
+    }, [webcamRef, setImgSrc]);
+
+    return (
+      <>
+        <Webcam audio={false} ref={webcamRef} screenshotFormat="image/jpeg" />
+        <button onClick={capture}>Capture photo</button>
+        {imgSrc && <img src={imgSrc} />}
+      </>
+    );
+  };
+
   return (
-    <div
-      data-bs-theme="dark"
-      className="p-1 mb-2 bg-black bg-gradient text-white"
-    >
-      <Webcam
-        audio={false}
-        height={720}
-        screenshotFormat="image/jpeg"
-        width={1280}
-        videoConstraints={videoConstraints}
-      />
+    <div className="p-1 text-white">
+      {/* <div>
+        <Webcam
+          audio={false}
+          height={720}
+          screenshotFormat="image/jpeg"
+          width={1280}
+          videoConstraints={videoConstraints}
+        />
+      </div> */}
+      <WebcamCapture></WebcamCapture>
       <div className="input-group mb-3">
         <input
           type="text"
