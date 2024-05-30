@@ -23,11 +23,11 @@ function App() {
     console.log(item);
   };
 
-  // const videoConstraints = {
-  //   width: 1280,
-  //   height: 720,
-  //   facingMode: { exact: "environment" },
-  // };
+  const videoConstraints = {
+    width: 128,
+    height: 128,
+    facingMode: "environment",
+  };
 
   async function subscribe() {
     const VAPID_PUBLIC_KEY =
@@ -72,8 +72,13 @@ function App() {
 
     return (
       <>
-        <Webcam audio={false} ref={webcamRef} screenshotFormat="image/jpeg" />
-        <button onClick={capture}>Capture photo</button>
+        <Webcam
+          videoConstraints={videoConstraints}
+          audio={false}
+          ref={webcamRef}
+          screenshotFormat="image/jpeg"
+        />
+        <Button onClick={capture}>Capture photo</Button>
         {imgSrc && <img src={imgSrc} />}
       </>
     );
@@ -81,21 +86,12 @@ function App() {
 
   return (
     <div className="p-1 text-white">
-      {/* <div>
-        <Webcam
-          audio={false}
-          height={720}
-          screenshotFormat="image/jpeg"
-          width={1280}
-          videoConstraints={videoConstraints}
-        />
-      </div> */}
-      <WebcamCapture></WebcamCapture>
       <div className="input-group mb-3">
+        <WebcamCapture></WebcamCapture>
         <input
           type="text"
           className="form-control"
-          placeholder="Banana"
+          placeholder="List your food here!"
           aria-label="Food"
           aria-describedby="basic-addon1"
         ></input>
