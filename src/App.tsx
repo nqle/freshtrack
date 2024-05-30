@@ -60,15 +60,15 @@ function App() {
   }
 
   const [takingPhoto, setTakingPhoto] = useState<boolean>(false);
+  const [imgSrc, setImgSrc] = useState<string | null>(null);
 
   const WebcamCapture = () => {
     const webcamRef = useRef<Webcam>(null);
-    const [imgSrc, setImgSrc] = useState<string | null>(null);
 
     const capture = useCallback(() => {
       if (webcamRef.current) {
-        const imageSrc = webcamRef.current.getScreenshot();
-        setImgSrc(imageSrc);
+        setImgSrc(webcamRef.current.getScreenshot());
+        setTakingPhoto(false);
       }
     }, [webcamRef, setImgSrc]);
 
@@ -81,9 +81,7 @@ function App() {
             ref={webcamRef}
             screenshotFormat="image/jpeg"
           />
-
           <Button onClick={capture}>Capture photo</Button>
-          {imgSrc && <img src={imgSrc} />}
         </>
       )
     );
@@ -98,17 +96,17 @@ function App() {
           }}
           className={"btn btn-primary"}
         >
-          {!takingPhoto ? (
-            <img
-              src="camera-icon.png"
-              alt="Take Photo"
-              style={{ width: "50px", height: "50px" }}
-            />
-          ) : (
-            "Cancel"
-          )}
+          {!imgSrc && !takingPhoto && "Take Photo"}
+          {imgSrc && !takingPhoto && "Retake Photo"}
+          {takingPhoto && "Cancel"}
         </button>
-        <WebcamCapture></WebcamCapture>
+        {takingPhoto ? (
+          <WebcamCapture></WebcamCapture>
+        ) : imgSrc ? (
+          <img src={imgSrc} />
+        ) : (
+          <></>
+        )}
         <input
           type="text"
           className="form-control"
