@@ -10,12 +10,7 @@ import Webcam from "react-webcam";
 function App() {
   const listGroupHeading = "My Food";
 
-  const apple: Food = { title: "Apple", expiry: new Date() };
-  const banana: Food = { title: "Banana" };
-  const spaghetti: Food = { title: "Spaghetti" };
-  const pho: Food = { title: "Pho" };
-
-  const [foodItems, setFoodItems] = useState([banana, apple, spaghetti, pho]);
+  const [foodItems, setFoodItems] = useState<Food[]>([]);
 
   const [alertVisible, setAlertVisible] = useState(false);
 
@@ -61,6 +56,14 @@ function App() {
 
   const [takingPhoto, setTakingPhoto] = useState<boolean>(false);
   const [imgSrc, setImgSrc] = useState<string | null>(null);
+  const [foodName, setFoodName] = useState("");
+  const [perishDate, setPerishDate] = useState<Date>(new Date());
+  const [validItem, setValidItem] = useState<boolean>(false);
+  const [validDate, setValidDate] = useState<boolean>(true);
+
+  const isValidDate = (date: Date) => {
+    return !isNaN(date.getTime());
+  };
 
   const WebcamCapture = () => {
     const webcamRef = useRef<Webcam>(null);
@@ -68,6 +71,7 @@ function App() {
     const capture = useCallback(() => {
       if (webcamRef.current) {
         setImgSrc(webcamRef.current.getScreenshot());
+        setValidItem(true);
         setTakingPhoto(false);
       }
     }, [webcamRef, setImgSrc]);
@@ -96,8 +100,11 @@ function App() {
     );
   };
 
+  const foodNameRef = useRef<HTMLInputElement>(null);
+  const perishDateRef = useRef<HTMLInputElement>(null);
+
   return (
-    <div className="p-1 text-white">
+    <div className="p-1">
       <div className="input-group mb-3">
         <button
           onClick={() => {
@@ -112,31 +119,80 @@ function App() {
         {takingPhoto && <WebcamCapture />}
         {!takingPhoto && imgSrc && <img src={imgSrc} />}
         <input
+          id="foodName"
           type="text"
           className="form-control"
           placeholder="List your food here"
           aria-label="Food"
           aria-describedby="basic-addon1"
+          onChange={(e) => {
+            const foodNameInput = e.target.value;
+            const foodNameIsValid =
+              foodNameInput.length !== 0 || imgSrc !== null;
+            if (foodNameIsValid) {
+              setFoodName(e.target.value);
+            }
+            setValidItem(foodNameIsValid);
+          }}
+          ref={foodNameRef}
         ></input>
-        <input id="perishDate" className="form-control" type="date" />
+        <input
+          id="perishDate"
+          className="form-control"
+          type="date"
+          defaultValue={perishDate.toISOString().split("T")[0]}
+          onChange={(e) => {
+            const maybePerishDate = new Date(e.target.value);
+            const dateIsValid = isValidDate(maybePerishDate);
+            if (dateIsValid) {
+              setPerishDate(maybePerishDate);
+            } else {
+              console.log("invalid time value");
+            }
+            setValidDate(dateIsValid);
+          }}
+          ref={perishDateRef}
+        />
       </div>
 
-      <Button
-        children="Add Banana"
-        onClick={() => setFoodItems([...foodItems, banana])}
-      ></Button>
+      <button
+        children="Add food to your list"
+        onClick={() => {
+          const itemToAdd: Food = {
+            title: foodName,
+            image: imgSrc || undefined,
+            expiry: perishDate,
+          };
+          setFoodName("");
+          setPerishDate(new Date());
+          setImgSrc(null);
+          setValidItem(false);
+          if (foodNameRef.current) {
+            foodNameRef.current.value = "";
+          }
+          if (perishDateRef.current) {
+            perishDateRef.current.value = new Date()
+              .toISOString()
+              .split("T")[0];
+          }
+          setFoodItems([...foodItems, itemToAdd]);
+        }}
+        className={"btn btn-primary "}
+        disabled={!validItem || !validDate}
+      ></button>
       <Button
         children="Clear Food"
         onClick={() => {
           setFoodItems([]);
         }}
       ></Button>
-      <Button
+      <button
         children="Toggle Alert"
         onClick={() => {
           setAlertVisible(!alertVisible);
         }}
-      ></Button>
+        className="d-none"
+      ></button>
       {alertVisible && (
         <Alert
           onClose={() => {
@@ -146,9 +202,11 @@ function App() {
           test
         </Alert>
       )}
-      <Button onClick={subscribe}>Enable Notifications</Button>
+      <button onClick={subscribe} className="d-none">
+        Enable Notifications
+      </button>
       {foodItems.length === 0 ? (
-        <h1>Start adding items!</h1>
+        <h1>Start tracking your food!</h1>
       ) : (
         <ListGroup
           items={foodItems.map((item, idx) => {
@@ -157,7 +215,7 @@ function App() {
                 key={"food-item-" + idx}
                 title={item.title}
                 date={item.expiry}
-                iconSrc="https://upload.wikimedia.org/wikipedia/commons/8/8a/Banana-Single.jpg"
+                iconSrc={item.image}
               ></FoodItem>
             );
           })}

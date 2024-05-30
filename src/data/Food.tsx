@@ -2,7 +2,7 @@ interface Food {
   title: string;
   expiry?: Date;
   created?: Date;
-  image?: ImageData;
+  image?: string;
 }
 
 export default Food;
