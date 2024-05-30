@@ -118,7 +118,7 @@ function App() {
           aria-label="Food"
           aria-describedby="basic-addon1"
         ></input>
-        <input id="startDate" className="form-control" type="date" />
+        <input id="perishDate" className="form-control" type="date" />
       </div>
 
       <Button
