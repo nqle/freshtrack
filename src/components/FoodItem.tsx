@@ -9,7 +9,9 @@ function FoodItem({ iconSrc, title, date }: Props) {
     <li className="list-group-item">
       <div className="row align-items-center">
         <div className="col-1">
-          {iconSrc && <img src={iconSrc} alt="Icon" className="img-fluid" />}
+          {iconSrc && (
+            <img src={iconSrc} alt="Icon" className="img-fluid img-thumbnail" />
+          )}
         </div>
         <div className="col">{title}</div>
         <div className="col">{date?.toLocaleDateString()}</div>
