@@ -8,9 +8,16 @@ function FoodItem({ iconSrc, title, date }: Props) {
   return (
     <li className="list-group-item">
       <div className="row align-items-center">
-        <div className="col-1">
+        <div className="col-2">
           {iconSrc && (
             <img src={iconSrc} alt="Icon" className="img-fluid img-thumbnail" />
+          )}
+          {!iconSrc && (
+            <img
+              src="generic-fooditem-1024x1024.png"
+              alt="Icon"
+              className="img-fluid img-thumbnail"
+            />
           )}
         </div>
         <div className="col">{title}</div>

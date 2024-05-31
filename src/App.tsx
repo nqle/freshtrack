@@ -87,7 +87,7 @@ function App() {
             className="btn btn-secondary rounded-pill m-4"
           >
             <img
-              src="camera-icon.png"
+              src="camera-icon-512x512.png"
               alt="Take Photo"
               style={{ width: "50px", height: "50px" }}
             />
