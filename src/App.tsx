@@ -56,9 +56,8 @@ function App() {
 
   const [takingPhoto, setTakingPhoto] = useState<boolean>(false);
   const [imgSrc, setImgSrc] = useState<string | null>(null);
-  const [foodName, setFoodName] = useState("");
+  const [foodName, setFoodName] = useState<string | null>(null);
   const [perishDate, setPerishDate] = useState<Date>(new Date());
-  const [validItem, setValidItem] = useState<boolean>(false);
   const [validDate, setValidDate] = useState<boolean>(true);
 
   const isValidDate = (date: Date) => {
@@ -71,7 +70,6 @@ function App() {
     const capture = useCallback(() => {
       if (webcamRef.current) {
         setImgSrc(webcamRef.current.getScreenshot());
-        setValidItem(true);
         setTakingPhoto(false);
       }
     }, [webcamRef, setImgSrc]);
@@ -127,12 +125,7 @@ function App() {
           aria-describedby="basic-addon1"
           onChange={(e) => {
             const foodNameInput = e.target.value;
-            const foodNameIsValid =
-              foodNameInput.length !== 0 || imgSrc !== null;
-            if (foodNameIsValid) {
-              setFoodName(e.target.value);
-            }
-            setValidItem(foodNameIsValid);
+            setFoodName(foodNameInput.length !== 0 ? foodNameInput : null);
           }}
           ref={foodNameRef}
         ></input>
@@ -159,14 +152,14 @@ function App() {
         children="Add food to your list"
         onClick={() => {
           const itemToAdd: Food = {
-            title: foodName,
+            title: foodName!, // the button is disabled if there is no foodName
             image: imgSrc || undefined,
             expiry: perishDate,
           };
-          setFoodName("");
+          setFoodName(null);
           setPerishDate(new Date());
           setImgSrc(null);
-          setValidItem(false);
+          setTakingPhoto(false);
           if (foodNameRef.current) {
             foodNameRef.current.value = "";
           }
@@ -178,7 +171,7 @@ function App() {
           setFoodItems([...foodItems, itemToAdd]);
         }}
         className={"btn btn-primary "}
-        disabled={!validItem || !validDate}
+        disabled={!foodName || !validDate}
       ></button>
       <Button
         children="Clear Food"
