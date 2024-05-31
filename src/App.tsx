@@ -57,8 +57,7 @@ function App() {
   const [takingPhoto, setTakingPhoto] = useState<boolean>(false);
   const [imgSrc, setImgSrc] = useState<string | null>(null);
   const [foodName, setFoodName] = useState<string | null>(null);
-  const [perishDate, setPerishDate] = useState<Date>(new Date());
-  const [validDate, setValidDate] = useState<boolean>(true);
+  const [perishDate, setPerishDate] = useState<Date | null>(new Date());
 
   const isValidDate = (date: Date) => {
     return !isNaN(date.getTime());
@@ -133,16 +132,9 @@ function App() {
           id="perishDate"
           className="form-control"
           type="date"
-          defaultValue={perishDate.toISOString().split("T")[0]}
+          defaultValue={new Date().toISOString().split("T")[0]}
           onChange={(e) => {
-            const maybePerishDate = new Date(e.target.value);
-            const dateIsValid = isValidDate(maybePerishDate);
-            if (dateIsValid) {
-              setPerishDate(maybePerishDate);
-            } else {
-              console.log("invalid time value");
-            }
-            setValidDate(dateIsValid);
+            setPerishDate(new Date(e.target.value));
           }}
           ref={perishDateRef}
         />
@@ -154,7 +146,7 @@ function App() {
           const itemToAdd: Food = {
             title: foodName!, // the button is disabled if there is no foodName
             image: imgSrc || undefined,
-            expiry: perishDate,
+            expiry: perishDate!, // the button is disabled if there is no perishDate
           };
           setFoodName(null);
           setPerishDate(new Date());
@@ -171,7 +163,7 @@ function App() {
           setFoodItems([...foodItems, itemToAdd]);
         }}
         className={"btn btn-primary "}
-        disabled={!foodName || !validDate}
+        disabled={!foodName || !perishDate || !isValidDate(perishDate)}
       ></button>
       <Button
         children="Clear Food"
