@@ -116,7 +116,7 @@ function App() {
         {takingPhoto && <WebcamCapture />}
         {!takingPhoto && imgSrc && <img src={imgSrc} />}
         <input
-          id="foodName"
+          id="foodDescription"
           type="text"
           className="form-control"
           placeholder="List your food here"
