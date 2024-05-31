@@ -35,7 +35,7 @@ import { registerSW } from "virtual:pwa-register";
 //   initServiceWorker();
 // }
 
-console.log("hellooooo");
+console.log("starting registration");
 
 registerSW({
   onRegisteredSW: (swScriptUrl, registration) => {
@@ -46,7 +46,7 @@ registerSW({
   },
 })();
 
-console.log("hellooooo2");
+console.log("initiated registration");
 
 // // Check if the browser supports service workers
 // if ("serviceWorker" in navigator) {
