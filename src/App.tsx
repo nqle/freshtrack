@@ -1,4 +1,3 @@
-// import Message from "./components/Message";
 import { useState, useRef, useCallback } from "react";
 import ListGroup from "./components/ListGroup";
 import Button from "./components/Button";
@@ -101,7 +100,7 @@ function App() {
   const perishDateRef = useRef<HTMLInputElement>(null);
 
   return (
-    <div className="p-1">
+    <div className="p-1 pb-5">
       <div className="input-group mb-3">
         <button
           onClick={() => {
