@@ -8,8 +8,14 @@ import Webcam from "react-webcam";
 
 function App() {
   const listGroupHeading = "My Food";
+  const apple: Food = {
+    title: "Apple",
+    expiry: new Date(),
+    image:
+      "https://upload.wikimedia.org/wikipedia/commons/8/8a/Banana-Single.jpg",
+  };
 
-  const [foodItems, setFoodItems] = useState<Food[]>([]);
+  const [foodItems, setFoodItems] = useState<Food[]>([apple]);
 
   const [alertVisible, setAlertVisible] = useState(false);
 
