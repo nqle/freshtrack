@@ -5,6 +5,7 @@ import Alert from "./components/Alert";
 import Food from "./data/Food";
 import FoodItem from "./components/FoodItem";
 import Webcam from "react-webcam";
+import ImageModal from "./components/ImageModal";
 
 function App() {
   const listGroupHeading = "My Food";
@@ -57,6 +58,8 @@ function App() {
   const [imgSrc, setImgSrc] = useState<string | null>(null);
   const [foodName, setFoodName] = useState<string | null>(null);
   const [perishDate, setPerishDate] = useState<Date | null>(new Date());
+  const [imageModalTriggered, setImageModalTriggered] =
+    useState<boolean>(false);
 
   const isValidDate = (date: Date) => {
     return !isNaN(date.getTime());
@@ -108,14 +111,35 @@ function App() {
           onClick={() => {
             setTakingPhoto(!takingPhoto);
           }}
-          className={"btn btn-primary"}
+          className={"btn btn-primary col-2"}
         >
           {!imgSrc && !takingPhoto && "Take Photo"}
           {imgSrc && !takingPhoto && "Retake Photo"}
           {takingPhoto && "Cancel"}
         </button>
         {takingPhoto && <WebcamCapture />}
-        {!takingPhoto && imgSrc && <img src={imgSrc} width={128} />}
+        {!takingPhoto && imgSrc && (
+          <>
+            <ImageModal
+              modalTriggered={imageModalTriggered}
+              onClose={() => setImageModalTriggered(false)}
+              title="Camera"
+              image={imgSrc}
+            />
+            <button
+              className="btn btn-default p-0"
+              onClick={() => {
+                setImageModalTriggered(true);
+              }}
+            >
+              <img
+                src={imgSrc}
+                width={128}
+                className="img-fluid img-thumbnail p-0"
+              />
+            </button>
+          </>
+        )}
         <input
           id="foodDescription"
           type="text"

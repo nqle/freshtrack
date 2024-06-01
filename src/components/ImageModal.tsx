@@ -1,12 +1,18 @@
-import Food from "../data/Food";
-
 interface ImageModalProps {
   modalTriggered: boolean;
   onClose: () => void;
-  foodData: Food;
+  title: string;
+  image: string;
+  footer?: string;
 }
 
-const ImageModal = ({ onClose, modalTriggered, foodData }: ImageModalProps) => {
+const ImageModal = ({
+  onClose,
+  modalTriggered,
+  title,
+  image,
+  footer,
+}: ImageModalProps) => {
   return (
     <>
       <div>
@@ -19,27 +25,23 @@ const ImageModal = ({ onClose, modalTriggered, foodData }: ImageModalProps) => {
           <div className="modal-dialog modal-dialog-centered modal-fullscreen-sm-down">
             <div className="modal-content">
               <div className="modal-header">
-                <h1 className="modal-title">{foodData.title}</h1>
+                <h1 className="modal-title">{title}</h1>
                 <button
                   onClick={onClose}
                   className="btn-close btn-close-white"
                 ></button>
               </div>
               <div className="modal-body">
-                {foodData.image && (
+                {image && (
                   <img
-                    src={foodData.image}
+                    src={image}
                     alt="Icon"
                     className="img-fluid img-thumbnail"
                   />
                 )}
               </div>
               <div className="modal-footer">
-                {foodData.expiry && (
-                  <h2 className="modal-title">
-                    {foodData.expiry.toDateString()}
-                  </h2>
-                )}
+                {footer && <h2 className="modal-title">{footer}</h2>}
               </div>
             </div>
           </div>
