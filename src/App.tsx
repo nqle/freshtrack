@@ -8,14 +8,8 @@ import Webcam from "react-webcam";
 
 function App() {
   const listGroupHeading = "My Food";
-  const apple: Food = {
-    title: "Apple",
-    expiry: new Date(),
-    image:
-      "https://upload.wikimedia.org/wikipedia/commons/8/8a/Banana-Single.jpg",
-  };
 
-  const [foodItems, setFoodItems] = useState<Food[]>([apple]);
+  const [foodItems, setFoodItems] = useState<Food[]>([]);
 
   const [alertVisible, setAlertVisible] = useState(false);
 
@@ -73,7 +67,9 @@ function App() {
 
     const capture = useCallback(() => {
       if (webcamRef.current) {
-        setImgSrc(webcamRef.current.getScreenshot());
+        setImgSrc(
+          webcamRef.current.getScreenshot({ width: 1024, height: 1024 })
+        );
         setTakingPhoto(false);
       }
     }, [webcamRef, setImgSrc]);
@@ -106,7 +102,7 @@ function App() {
   const perishDateRef = useRef<HTMLInputElement>(null);
 
   return (
-    <div className="p-1 pb-5">
+    <div className="pb-5">
       <div className="input-group mb-3">
         <button
           onClick={() => {
@@ -119,7 +115,7 @@ function App() {
           {takingPhoto && "Cancel"}
         </button>
         {takingPhoto && <WebcamCapture />}
-        {!takingPhoto && imgSrc && <img src={imgSrc} />}
+        {!takingPhoto && imgSrc && <img src={imgSrc} width={128} />}
         <input
           id="foodDescription"
           type="text"
