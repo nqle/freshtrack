@@ -196,14 +196,8 @@ function App() {
       ) : (
         <ListGroup
           items={foodItems.map((item, idx) => {
-            return (
-              <FoodItem
-                key={"food-item-" + idx}
-                title={item.title}
-                date={item.expiry}
-                iconSrc={item.image || "generic-fooditem-1024x1024.png"}
-              ></FoodItem>
-            );
+            item.image ??= "generic-fooditem-1024x1024.png";
+            return <FoodItem key={"food-item-" + idx} food={item}></FoodItem>;
           })}
           heading={listGroupHeading}
           onSelectItem={handleSelectItem}
