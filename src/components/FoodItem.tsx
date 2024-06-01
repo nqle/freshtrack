@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 interface Props {
-  iconSrc?: string;
+  iconSrc: string;
   title: string;
   date?: Date;
 }
@@ -26,7 +26,10 @@ const Modal = ({ onClose, modalTriggered, foodData }: ModalProps) => {
             <div className="modal-content">
               <div className="modal-header">
                 <h1 className="modal-title">{foodData.title}</h1>
-                <button onClick={onClose} className="btn-close"></button>
+                <button
+                  onClick={onClose}
+                  className="btn-close btn-close-white"
+                ></button>
               </div>
               <div className="modal-body">
                 {foodData.iconSrc && (
@@ -70,7 +73,7 @@ function FoodItem({ iconSrc, title, date }: Props) {
             aria-expanded={!modalTriggered ? true : false}
           >
             <img
-              src={iconSrc || "generic-fooditem-1024x1024.png"}
+              src={iconSrc}
               alt="Icon"
               className="img-fluid img-thumbnail p-0"
               width={128}

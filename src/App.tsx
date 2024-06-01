@@ -201,7 +201,7 @@ function App() {
                 key={"food-item-" + idx}
                 title={item.title}
                 date={item.expiry}
-                iconSrc={item.image}
+                iconSrc={item.image || "generic-fooditem-1024x1024.png"}
               ></FoodItem>
             );
           })}
