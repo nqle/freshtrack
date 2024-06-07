@@ -62,6 +62,24 @@ function App() {
   const foodNameRef = useRef<HTMLInputElement>(null);
   const perishDateRef = useRef<HTMLInputElement>(null);
 
+  const handleFoodAdd = () => {
+    const itemToAdd: Food = {
+      title: foodName!, // the button is disabled if there is no foodName
+      image: imgSrc || undefined,
+      expiry: perishDate!, // the button is disabled if there is no perishDate
+    };
+    setFoodName(null);
+    setPerishDate(new Date());
+    setImgSrc(null);
+    if (foodNameRef.current) {
+      foodNameRef.current.value = "";
+    }
+    if (perishDateRef.current) {
+      perishDateRef.current.value = new Date().toISOString().split("T")[0];
+    }
+    setFoodItems([...foodItems, itemToAdd]);
+  };
+
   return (
     <div className="pb-5">
       <div className="input-group mb-3">
@@ -108,6 +126,12 @@ function App() {
           placeholder="List your food here"
           aria-label="Food"
           aria-describedby="basic-addon1"
+          onKeyUp={(e) => {
+            if (e.key === "Enter") {
+              e.preventDefault();
+              handleFoodAdd();
+            }
+          }}
           onChange={(e) => {
             const foodNameInput = e.target.value;
             setFoodName(foodNameInput.length !== 0 ? foodNameInput : null);
@@ -128,25 +152,7 @@ function App() {
 
       <button
         children="Add food to your list"
-        onClick={() => {
-          const itemToAdd: Food = {
-            title: foodName!, // the button is disabled if there is no foodName
-            image: imgSrc || undefined,
-            expiry: perishDate!, // the button is disabled if there is no perishDate
-          };
-          setFoodName(null);
-          setPerishDate(new Date());
-          setImgSrc(null);
-          if (foodNameRef.current) {
-            foodNameRef.current.value = "";
-          }
-          if (perishDateRef.current) {
-            perishDateRef.current.value = new Date()
-              .toISOString()
-              .split("T")[0];
-          }
-          setFoodItems([...foodItems, itemToAdd]);
-        }}
+        onClick={handleFoodAdd}
         className={"btn btn-primary "}
         disabled={!foodName || !perishDate || !isValidDate(perishDate)}
       ></button>
