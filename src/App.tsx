@@ -1,11 +1,10 @@
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef } from "react";
 import ListGroup from "./components/ListGroup";
-import Button from "./components/Button";
 import Alert from "./components/Alert";
 import Food from "./data/Food";
 import FoodItem from "./components/FoodItem";
-import Webcam from "react-webcam";
 import ImageModal from "./components/ImageModal";
+import WebcamModal from "./components/WebcamModal";
 
 function App() {
   const listGroupHeading = "My Food";
@@ -16,12 +15,6 @@ function App() {
 
   const handleSelectItem = (item: string) => {
     console.log(item);
-  };
-
-  const videoConstraints = {
-    width: 128,
-    height: 128,
-    facingMode: "environment",
   };
 
   async function subscribe() {
@@ -54,51 +47,16 @@ function App() {
     }
   }
 
-  const [takingPhoto, setTakingPhoto] = useState<boolean>(false);
   const [imgSrc, setImgSrc] = useState<string | null>(null);
   const [foodName, setFoodName] = useState<string | null>(null);
   const [perishDate, setPerishDate] = useState<Date | null>(new Date());
   const [imageModalTriggered, setImageModalTriggered] =
     useState<boolean>(false);
+  const [webcamModalTriggered, setWebcamModalTriggered] =
+    useState<boolean>(false);
 
   const isValidDate = (date: Date) => {
     return !isNaN(date.getTime());
-  };
-
-  const WebcamCapture = () => {
-    const webcamRef = useRef<Webcam>(null);
-
-    const capture = useCallback(() => {
-      if (webcamRef.current) {
-        setImgSrc(
-          webcamRef.current.getScreenshot({ width: 1024, height: 1024 })
-        );
-        setTakingPhoto(false);
-      }
-    }, [webcamRef, setImgSrc]);
-
-    return (
-      takingPhoto && (
-        <>
-          <Webcam
-            videoConstraints={videoConstraints}
-            audio={false}
-            ref={webcamRef}
-            screenshotFormat="image/jpeg"
-          />
-          <button
-            onClick={capture}
-            className="btn btn-secondary rounded-pill m-4"
-          >
-            <img
-              src="camera-icon-512x512.png"
-              alt="Take Photo"
-              style={{ width: "50px", height: "50px" }}
-            />
-          </button>
-        </>
-      )
-    );
   };
 
   const foodNameRef = useRef<HTMLInputElement>(null);
@@ -107,18 +65,21 @@ function App() {
   return (
     <div className="pb-5">
       <div className="input-group mb-3">
+        <WebcamModal
+          modalTriggered={webcamModalTriggered}
+          onClose={() => setWebcamModalTriggered(false)}
+          onImageCapture={setImgSrc}
+        />
         <button
           onClick={() => {
-            setTakingPhoto(!takingPhoto);
+            setWebcamModalTriggered(true);
           }}
           className={"btn btn-primary col-2"}
         >
-          {!imgSrc && !takingPhoto && "Take Photo"}
-          {imgSrc && !takingPhoto && "Retake Photo"}
-          {takingPhoto && "Cancel"}
+          {!imgSrc && "Take Photo"}
+          {imgSrc && "Retake Photo"}
         </button>
-        {takingPhoto && <WebcamCapture />}
-        {!takingPhoto && imgSrc && (
+        {imgSrc && (
           <>
             <ImageModal
               modalTriggered={imageModalTriggered}
@@ -176,7 +137,6 @@ function App() {
           setFoodName(null);
           setPerishDate(new Date());
           setImgSrc(null);
-          setTakingPhoto(false);
           if (foodNameRef.current) {
             foodNameRef.current.value = "";
           }
@@ -190,12 +150,14 @@ function App() {
         className={"btn btn-primary "}
         disabled={!foodName || !perishDate || !isValidDate(perishDate)}
       ></button>
-      <Button
+      <button
         children="Clear Food"
         onClick={() => {
           setFoodItems([]);
         }}
-      ></Button>
+        className={"btn btn-primary "}
+        disabled={foodItems.length === 0}
+      ></button>
       <button
         children="Toggle Alert"
         onClick={() => {
