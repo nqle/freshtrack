@@ -141,7 +141,7 @@ function App() {
         ></input>
         <input
           id="perishDate"
-          className="form-control"
+          className="form-control align-items-center"
           type="date"
           defaultValue={new Date().toISOString().split("T")[0]}
           onChange={(e) => {
