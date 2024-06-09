@@ -1,5 +1,5 @@
 import Webcam from "react-webcam";
-import { useRef, useCallback, useState } from "react";
+import { useRef, useCallback, useState, useEffect } from "react";
 
 interface WebcamModalProps {
   modalTriggered: boolean;
@@ -20,9 +20,22 @@ const WebcamModal = ({
     height: 512,
   });
 
+  useEffect(() => {
+    function handleResize() {
+      setWindowSize({
+        width: window.innerWidth,
+        height: window.innerHeight,
+      });
+    }
+    window.addEventListener("resize", handleResize);
+    handleResize();
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []); // Empty array ensures that effect is only run on mount
+
   const videoConstraints = {
     width: windowSize.width,
-    height: windowSize.height,
+    height: windowSize.height * 0.75,
     facingMode: "environment",
   };
   const webcamRef = useRef<Webcam>(null);
@@ -54,15 +67,7 @@ const WebcamModal = ({
                   className="btn-close btn-close-white"
                 ></button>
               </div>
-              <div
-                className="modal-body m-0 p-0 w-100 text-center align-items-center"
-                onResize={(event) => {
-                  setWindowSize({
-                    width: event.currentTarget.clientWidth,
-                    height: event.currentTarget.clientHeight,
-                  });
-                }}
-              >
+              <div className="modal-body m-0 p-0 w-100 text-center align-items-center">
                 {modalTriggered && (
                   <Webcam
                     videoConstraints={videoConstraints}
