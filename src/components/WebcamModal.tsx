@@ -1,5 +1,5 @@
 import Webcam from "react-webcam";
-import { useRef, useCallback } from "react";
+import { useRef, useCallback, useState } from "react";
 
 interface WebcamModalProps {
   modalTriggered: boolean;
@@ -12,9 +12,30 @@ const WebcamModal = ({
   modalTriggered,
   onImageCapture,
 }: WebcamModalProps) => {
-  const videoConstraints = {
+  const [windowSize, setWindowSize] = useState<{
+    width: number;
+    height: number;
+  }>({
     width: 512,
     height: 512,
+  });
+
+  // useEffect(() => {
+  //   function handleResize() {
+  //     setWindowSize({
+  //       width: window.innerWidth,
+  //       height: window.innerHeight,
+  //     });
+  //   }
+  //   window.addEventListener("resize", handleResize);
+  //   handleResize();
+
+  //   return () => window.removeEventListener("resize", handleResize);
+  // }, []); // Empty array ensures that effect is only run on mount
+
+  const videoConstraints = {
+    width: windowSize.width,
+    height: windowSize.height,
     facingMode: "environment",
   };
   const webcamRef = useRef<Webcam>(null);
@@ -37,7 +58,7 @@ const WebcamModal = ({
           style={{ display: modalTriggered ? "block" : "none" }}
           aria-hidden={true}
         >
-          <div className="modal-dialog modal-dialog-centered modal-fullscreen-sm-down">
+          <div className="modal-dialog modal-dialog-centered modal-fullscreen">
             <div className="modal-content">
               <div className="modal-header">
                 <h1 className="modal-title">Camera</h1>
@@ -46,17 +67,23 @@ const WebcamModal = ({
                   className="btn-close btn-close-white"
                 ></button>
               </div>
-              <div className="modal-body">
-                <div className="w-100 text-center">
-                  {modalTriggered && (
-                    <Webcam
-                      videoConstraints={videoConstraints}
-                      audio={false}
-                      ref={webcamRef}
-                      screenshotFormat="image/jpeg"
-                    />
-                  )}
-                </div>
+              <div
+                className="modal-body m-0 p-0 w-100 text-center align-items-center"
+                onResize={(event) => {
+                  setWindowSize({
+                    width: event.currentTarget.clientWidth,
+                    height: event.currentTarget.clientHeight,
+                  });
+                }}
+              >
+                {modalTriggered && (
+                  <Webcam
+                    videoConstraints={videoConstraints}
+                    audio={false}
+                    ref={webcamRef}
+                    screenshotFormat="image/jpeg"
+                  />
+                )}
               </div>
               <div className="modal-footer justify-content-center">
                 <button
