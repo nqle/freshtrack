@@ -20,19 +20,6 @@ const WebcamModal = ({
     height: 512,
   });
 
-  // useEffect(() => {
-  //   function handleResize() {
-  //     setWindowSize({
-  //       width: window.innerWidth,
-  //       height: window.innerHeight,
-  //     });
-  //   }
-  //   window.addEventListener("resize", handleResize);
-  //   handleResize();
-
-  //   return () => window.removeEventListener("resize", handleResize);
-  // }, []); // Empty array ensures that effect is only run on mount
-
   const videoConstraints = {
     width: windowSize.width,
     height: windowSize.height,
