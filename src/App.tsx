@@ -73,6 +73,7 @@ function App() {
     setImgSrc(null);
     if (foodNameRef.current) {
       foodNameRef.current.value = "";
+      foodNameRef.current.focus();
     }
     if (perishDateRef.current) {
       perishDateRef.current.value = new Date().toISOString().split("T")[0];
